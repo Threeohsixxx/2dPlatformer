@@ -1,0 +1,40 @@
+public class PlayerController : MonoBehaviour 
+{
+
+    public float MovementSpeed;
+    public float JumpForce;
+
+    private float PlayerHealth = 4;
+
+    Rigidbody2D PlayerRigid;
+
+    void Start()
+    {
+        PlayerRigid = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        //Player Move code
+        PlayerRigid.velocity = new Vector2(Input.GetAxis("Horizontal") * MovementSpeed * Time.deltaTime, PlayerRigid.velocity.y);
+
+        Debug.DrawLine(transform.position, transform.position + new Vector3(0, -0.5f, 0), Color.blue);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+
+            if (Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -0.5f, 0), 1 << LayerMask.NameToLayer("Land")))
+            {
+                PlayerRigid.AddForce(new Vector2(0, JumpForce));
+            }
+        }
+
+        //Goomba Stomp Code
+        RaycastHit2D Hit = Physics2D.Raycast(transform.position, Vector2.down, 0.5f, 1 << LayerMask.NameToLayer("Enemies"));
+        if (Hit)
+        {
+            Hit.transform.gameObject.SetActive(false);
+            PlayerRigid.velocity = new Vector2(PlayerRigid.velocity.x, 0);
+            PlayerRigid.AddForce(new Vector2(0, JumpForce));
+        }
+ }
