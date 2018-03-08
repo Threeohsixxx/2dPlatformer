@@ -1,16 +1,21 @@
-public class PlayerController : MonoBehaviour 
-{
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour {
 
     public float MovementSpeed;
     public float JumpForce;
 
-    private float PlayerHealth = 4;
+    public float PlayerHealth = 4;
+    public float PlayerAmmo = 0;
 
     Rigidbody2D PlayerRigid;
 
-    void Start()
+    void Awake()
     {
         PlayerRigid = GetComponent<Rigidbody2D>();
+        Collider2D collider = GetComponent<BoxCollider2D>();
     }
 
     void Update()
@@ -37,4 +42,35 @@ public class PlayerController : MonoBehaviour
             PlayerRigid.velocity = new Vector2(PlayerRigid.velocity.x, 0);
             PlayerRigid.AddForce(new Vector2(0, JumpForce));
         }
- }
+
+        //Player Health code
+        if (PlayerHealth == 0)
+        {
+            //GAME OVER or whatever
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemies"))
+        {
+            print("Enemy Detected");
+        }
+        
+        if (collision.gameObject.CompareTag("SmallHealth"))
+        {
+            PlayerHealth += PickupScript.SHealthGain;
+            print(PlayerHealth);
+        }
+        if (collision.gameObject.CompareTag("BigHealth"))
+        {
+            PlayerHealth += PickupScript.BHealthGain;
+            print(PlayerHealth);
+        }
+        if (collision.gameObject.CompareTag("Ammo"))
+        {
+            PlayerAmmo += PickupScript.AmmoGain;
+            print(PlayerAmmo);
+        }
+    }
+}
