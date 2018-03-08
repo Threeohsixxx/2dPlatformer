@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PickupScript : MonoBehaviour {
+
+    public GameObject PickupObject;
+
+    public static float SHealthGain = 1;
+    public static float BHealthGain = 2;
+    public static float AmmoGain = 3;
+    public static float InvulnTime = 60;
+    public static float DDMGTime = 60;
+
+	// Use this for initialization
+	void Awake ()
+    {
+        Collider2D collider = GetComponent<BoxCollider2D>();
+	}
+
+    // Update is called once per frame
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Destroy(this.PickupObject);
+        }
+	}
+}
